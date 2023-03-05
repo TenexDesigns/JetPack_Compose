@@ -16,6 +16,10 @@ Also supportsMVVM out of the box
 This means that it will be easier to arrange our code into smaller chunks
 
 
+LIFE CYCLE OF OUR COMPOSABLE
+You need to understand Intial composition and Recomposition
+
+
 LIFE CYCLE 
 
 step 1               
