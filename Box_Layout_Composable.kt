@@ -20,7 +20,7 @@ fun BoxComposable() {
 IN THE ABOVE 
 We create a composable custom function and give it a custom name . This cuso  name is what we  will we call to instancite the  box model
 
-Now to instanciate the boc=x composbale we call the Box() composable and ass in some parameters
+Now to instanciate the box composbale we call the Box() composable and ass in some parameters
 such as
 
 modifier - To set the spec of the vox mode
@@ -36,7 +36,7 @@ To actualy have tetxt in a view i android , we use the Text() composable functio
                         .width(100.dp)
                         .background(Color.Blue))
             {
-              Text(text = "I love android")
+              Text(text = "I love android",font-size = 34.sp)
               
             }
             
@@ -44,6 +44,26 @@ To actualy have tetxt in a view i android , we use the Text() composable functio
             HERES MORE ABOUT THE BOX MODEL
 
  The box model can be used to hold other boxex.
+This builds a box that fills the entire screen .
+This box has another box within it that has the text "I love android" 
+The box with the text is alignened to the centerLeft or center start of the full screen box
+
+
+        //This describes the size of box    //This says how items within box are to be aligned
+    Box (modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart){
+        //This is the child box within the bove box
+        Box(modifier = Modifier
+            .height(100.dp)
+            .width(100.dp)
+            .background(Color.Blue)){
+            //This text is alose a chile od the box that is holding it.
+                                          //This make the size of the text to be so large that it is not fully visisbel
+                                         //To fix that we can make the box holding the  text to be scrollable by adding 
+                                         //The .verticalScroll(remeberscrollSatte()) method.
+              Text(text = "I love android",fontSize = 40.sp)
+            }        
+    }
+}
 
 
 
