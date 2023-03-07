@@ -99,6 +99,83 @@ We will use the state of this icon to expand the card or contarct the card.
     
     
     
+    Here is the complete code
+         
+         
+         var expandState by remember{ mutableStateOf(false) }
+    val rotationState by animateFloatAsState(targetValue = if(expandState) 180f else 0f)
+
+
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
+
+
+            ),
+        shape = Shapes.medium,
+        onClick = {
+            expandState = !expandState
+        } ){
+
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)){
+            Row(verticalAlignment = Alignment.CenterVertically)
+            {
+                Text(text="This si the Tital",
+                    modifier = Modifier.weight(6f),
+                    fontSize = MaterialTheme.typography.h6.fontSize,
+                    fontWeight = FontWeight.Bold)
+
+                IconButton(modifier = Modifier
+                    .alpha(ContentAlpha.medium)
+                    .weight(1f)
+                    .rotate(rotationState),
+                    onClick = {
+                        expandState = !expandState
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "This is dragDown Arrow"
+                    )
+
+                }
+
+            }
+
+            if(expandState){
+                Text(
+                    text="Lorem Ipsum is simply dummy text of the" +
+                            " printing and typesetting industry. Lorem " +
+                            "Ipsum has been the industry's standard dummy text" +
+                            " ever since the 1500s, when an unknown printer took a" +
+                            " galley of type and scrambled it to make a type specimen " +
+                            "book. It has survived not only five centuries, but also the " +
+                            "leap into electronic typesetting, remaining essentially" +
+                            " unchanged. It was popularised in the 1960s with the release" +
+                            " of Letraset sheets containing Lorem Ipsum passages, and more " +
+                            "recently with desktop publishing" +
+                            " software like Aldus PageMaker including versions of Lorem Ipsum."
+                , fontSize = MaterialTheme.typography.subtitle1.fontSize,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis
+
+                )
+            }
+        }
+
+    }
+
+         
+         
+         
+    
     
     
     
