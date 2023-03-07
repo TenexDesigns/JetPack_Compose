@@ -152,7 +152,35 @@ Text(
                               
                     //This repeats the text 20 times   // This male s the overflowing text in the container to be clipeed or have elippsis or 
             (text = "Hello george".repeat(20), overflow = TextOverflow.Clip)
+            
+            
+            
+            WE MAY ALSO WANT TO MAKE OUR TEXT SELECTABLE
+             To do that we put our text in a selectionContainer
+            
+            example
+            
+            selectionContainer{
+                  Text(text = "Hello George Gacau")
+                  Text(text = "Hello George Gacau")
+                  Text(text = "Hello George Gacau")
+            
+            
+            }
+            
+            If there is any text within our selectaable text that we dont want the user to be able to select we use the  DisableSelection{} method
 
+      selectionContainer{
+                  Text(text = "Hello George Gacau")
+                  
+                  DisableSelection{
+                        Text(text = "Hello George Gacau")
+                  }
+                  
+                  Text(text = "Hello George Gacau")
+            
+            
+            }
 
 
 
