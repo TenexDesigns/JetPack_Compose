@@ -63,7 +63,22 @@ To decare state we use the by remembered() method and we put in our state in the
                   
                   keyboardOptions = KeyBoardOptions(
                     keyboardType = keyBoardType.password // This is used to specifiy the type of keyboard that you want e.g password,number,or text
-                    imeAction = ImeAction.done // This is used to change the icon at the far right of the keyboard  e.g ImeAction.done is a check mark, ImeAction.go is an arrow 
+                    imeAction = ImeAction.done // This is used to change the icon at the far right of the keyboard  e.g ImeAction.done is a check mark, ImeAction.go is an arrow  ImeAction.search gives a search icon.
+                     // After putting an imeAction and specifiying the type of icon we want. Then we have to specify an action listner and say the ison to be excuted 
+                  
+                  )
+                  
+                  
+                  
+                  keyboardActions = keyboardActions(
+                          onDone = {
+                                 // Here we specify the action to be taken onclicking the done icon
+                                  
+                                  Log.d("When clicked do this","clicked")
+                          
+                          
+                          }
+                  
                   
                   
                   )
@@ -74,6 +89,13 @@ To decare state we use the by remembered() method and we put in our state in the
                   
                   }
              )
+                   
+                   
+                   
+                   THER ARE OTHER TYPES OF TEXT FIELDS
+                          Outline - Which has an outline
+                          Basic --Which doent have ant design nor does it support trailing nor leading icons But we can give it our own desired design
+                          e.g background padding  using the modifier.
 
 
         
