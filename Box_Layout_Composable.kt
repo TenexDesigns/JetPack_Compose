@@ -1,6 +1,16 @@
 Box ix similar to the frameLayout composable.
 Inside the box composable you can add diffrent composables.
 Each composable will be STACKED ON TOP OF THE OTHER.
+The items in a box are stacked on top of each other
+e.g 
+box{
+    box()         //The box will be at the botton and the text will be on top
+    text("Hey")
+
+}
+
+
+HERE IS AN EXAMPLE OF A BOX.
 
 
 @Composable
