@@ -146,6 +146,12 @@ Text(
                      
                      
                      )
+            
+            
+            HERE ARE SOME MORE THINGS WE CAN DO
+                              
+                    //This repeats the text 20 times   // This male s the overflowing text in the container to be clipeed or have elippsis or 
+            (text = "Hello george".repeat(20), overflow = TextOverflow.Clip)
 
 
 
