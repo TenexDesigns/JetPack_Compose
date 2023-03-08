@@ -144,7 +144,8 @@ class MainActivity : ComponentActivity() {
                 val getAllData = personRepository.getAllData() // Here we call the function that gets the array of persons we created
 
                 LazyColumn(
-                    contentPadding = PaddingValues(12.dp)
+                    contentPadding = PaddingValues(12.dp)  //This adds a padding of 12.dp on all sides of the row
+                    vertcalArrangement = Arrangement.spaceBy(12.dp)// This puts a space of 12.dp  on each row.
                 ) {
                   //Here we use items to pass our arrray of items 
                     items(items = getAllData) { person ->  // Our item method goes throught each item in our array 
