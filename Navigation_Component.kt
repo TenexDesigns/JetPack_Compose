@@ -41,6 +41,264 @@ As you move through a navigation graph, it orchestrates the swapping of destinat
 
 
 
+NAVIGATION CONTROLLER
+In order to navigate from one screen to another we use navigation controller
+
+
+
+package com.example.tenexapp
+
+import android.media.Image
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIconDefaults.Text
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.semantics.SemanticsProperties.Text
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import coil.Coil
+import coil.compose.rememberImagePainter
+import coil.transform.BlurTransformation
+import coil.transform.CircleCropTransformation
+import coil.transform.GrayscaleTransformation
+import coil.transform.RoundedCornersTransformation
+import com.example.tenexapp.ui.theme.TenexappTheme
+import org.w3c.dom.Text
+
+
+//NAVIGATION HOST IS LIKE A LINK BETWEEN THE NAVIGATION GRAPH AND THE NAVIGATION CONTROLLER
+//iT CONTAINS ALL THE COMPOSABLES AND THEIR DESTINATIONS
+//tO CREATE A NAVIGATION HOST  first WE HAVE TO CREATE A ROOT,THIS ROOT DEFINES THE DESTINATIONS OF CERTAIN COMPOSABLES
+//THIS IS THE ROOT
+object  NavRoute{
+    val SCREEN_A = "ScreenA" //This is the first destination // Here you can define any string that you want.
+    val SCREEN_B = "ScreenB"
+    val SCREEN_C = "ScreenC"
+}
+
+
+
+
+// THIS IS THE NAV HOST
+// It must get the nav host controller so that it can easily navigate between this somponents/ fragments
+
+
+@Composable
+fun MyNavHost(navHostController: NavHostController){
+
+    NavHost(navController = navHostController,// Here we use the navHostController recerived as a argument
+        startDestination = NavRoute.SCREEN_A  // HERE WE USE THE ROUTE . tHE BUILDER WE DEAL WITH IT IN THE LAMDA FUNCTION
+    ){//Add the Composable to the NavGraphBuilder
+        composable(NavRoute.SCREEN_A)// Here we pass our route. Since we create our route i.e the NavRoute.
+        {
+            ScreenA {
+                navHostController.navigate(NavRoute.SCREEN_B)
+            } // Here we pass the composable that we want to navigate to.
+
+        }
+        //We can duplicate what we didt above here for screen B and c
+        composable(NavRoute.SCREEN_B)// Here we pass our route. Since we create our route i.e the NavRoute.
+        {
+            ScreenB {
+                navHostController.navigate(NavRoute.SCREEN_C)
+            } // Here we pass the composable that we want to navigate to.
+
+        }
+        composable(NavRoute.SCREEN_C)// Here we pass our route. Since we create our route i.e the NavRoute.
+        {
+            ScreenC {
+                // Here we pass the composable that we want to navigate to.
+                navHostController.navigate(NavRoute.SCREEN_A) {
+                    popUpTo(NavRoute.SCREEN_A){inclusive= true}//Now her the user on pressing the back baton we want then to reach screenA and then get out of the activity
+                }
+            //Now her the user on pressing the back baton we want then to reach screenA and then get out of the activity
+            } // Here we pass the composable that we want to navigate to.
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            TenexappTheme {
+                // A surface container using the 'background' color from the theme
+                
+                val navController = rememberNavController()
+                Surface(
+
+                    color = MaterialTheme.colors.background
+                ) {
+                    
+                    // Here we can now call the navHost and pass in the navController that we defined .The one that has a rememberd on it. 
+                    MyNavHost(navHostController = navController)
+
+
+                }
+            }
+        }
+    }
+}
+
+
+
+
+// NAVIGATE WITH ARGUMENTS
+//In order to pass arguments from one composable to another we have to pass it with the route.
+//Let us create a variable tht we will pass with the route and the arguments
+
+var routewithArguments ="${NavRoute.SCREEN_A}"
+
+
+// THESE ARE THE SCREENS WE WILL BE NAVIAGATING TO.
+
+
+
+
+package com.example.tenexapp
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+
+
+@Composable
+fun ScreenA(onNavigation:() -> Unit) {
+
+    Surface(color= Color.Red,modifier=Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+
+
+        ){
+            Text(text="This is screen A")
+            Button(
+                onClick ={
+                    onNavigation()
+
+                },
+                modifier = Modifier.align( Alignment.BottomCenter)
+            ){
+                Text(text = "Navigate")
+
+            }
+
+        }
+
+
+    }
+
+
+
+}
+
+
+
+@Composable
+fun ScreenB(onNavigation:() -> Unit) {
+
+    Surface(color= Color.Blue,modifier=Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+
+
+        ){
+            Text(text="This is screen B")
+            Button(
+                onClick ={
+                    onNavigation()
+                },
+                modifier = Modifier.align( Alignment.BottomCenter)
+            ){
+                Text(text = "Navigate")
+
+            }
+
+        }
+
+
+    }
+
+
+
+}
+
+
+
+@Composable
+             // Here we pass the navigation host we created
+fun ScreenC(onNavigation:() -> Unit) {
+
+    Surface(color= Color.Green,modifier=Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+
+
+        ){
+            Text(text="This is screen C")
+            Button(
+                onClick ={
+                    onNavigation()
+                },
+                modifier = Modifier.align( Alignment.BottomCenter)
+            ){
+                Text(text = "Navigate")
+
+            }
+
+        }
+
+
+    }
+
+
+
+}
+
+
 
 
 
