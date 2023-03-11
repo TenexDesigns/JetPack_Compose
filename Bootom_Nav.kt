@@ -48,17 +48,19 @@ fun BottomNavHost(navHostController: NavHostController){
         composable(route= Screen.Home.route) {
             Home()
         }
-        composable(route= Screen.Home.route) {
-            Home()
+        composable(route= Screen.Notifications.route) {
+            Notifications()
         }
-        composable(route= Screen.Home.route) {
-            Home()
+        composable(route= Screen.Messages.route) {
+            messages()
         }
 
 
     }
 }
 
+
+//This will be the code thatw will be excuted for the selected item on the ottonm bar.
 
 @Composable
 fun BottomNavigationScreen(navController: NavController,items:List<Screens>){
@@ -79,3 +81,95 @@ fun BottomNavigationScreen(navController: NavController,items:List<Screens>){
         
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = { BottomBar(navController = navController) }
+    ) {
+        BottomNavGraph(navController = navController)
+    }
+}
+
+@Composable
+fun BottomBar(navController: NavHostController) {
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.Profile,
+        BottomBarScreen.Settings,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    BottomNavigation {
+        screens.forEach { screen ->
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
+        }
+    }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    BottomNavigationItem(
+        label = {
+            Text(text = screen.title)
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Navigation Icon"
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+    )
+}
+
+
+
+
+
+
+
+
