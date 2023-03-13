@@ -13,6 +13,19 @@ So in our navHost we are going to define all of our screens,its routes ,its argu
 In our nav host we also define our start destination as well
 
 
+**NOTE
+Each NavController must be associated with a single NavHost composable.
+The NavHost links the NavController with a navigation graph that specifies the composable destinations that you should be able to navigate between.
+As you navigate between composables, the content of the NavHost is automatically recomposed.
+Each composable destination in your navigation graph is associated with a route.
+
+
+Key Term: Route is a String that defines the path to your composable.
+You can think of it as an implicit deep link that leads to a specific destination.
+Each destination should have a unique route.
+
+
+
 DEFINING SCREENS
 In the past we used to define our screen with activities of fragments.
 But in jetpack compose we define screen inside a composable function
@@ -120,7 +133,15 @@ class MainActivity : ComponentActivity()
               //Inside the body of this navHost we declare all our screen or destinations
             //  Inside this body,it contains an important function called composable().And inside this function we  declare our destinations.
               //This composable function accepts multiple parameters ,one of them being a route.Here we pass in the routes we declared in the sealed class
-              composable(route = Screen.Home.route){
+             
+                
+                THIS IS OUR NAVIGATION GRAPH .THIS IS THE ROOT NAVGRAPH THAT LEADS TO THIS THEREE SCREENS 
+                //Creating the NavHost requires the NavController previously created via rememberNavController() and 
+                //the route of the starting destination of your graph. 
+                //You can add to your navigation structure by using the composable() method. 
+                //This method requires that you provide a route and the composable that should be linked to the destination:
+                
+                composable(route = Screen.Home.route){
                 Then inside here we pass the screen that we want to be seen
                 
                 HomeScreen()
