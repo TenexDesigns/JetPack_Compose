@@ -87,12 +87,13 @@ fun DetailScreen() {
 class MainActivity : ComponentActivity()
 
 
-var navController  = rememberNavController()
+
 
       
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            var navController  = rememberNavController()
             TenexappTheme {
               
               
@@ -101,7 +102,7 @@ var navController  = rememberNavController()
       
 
       
-      NEXTWE HAVE TO DECLARE OUR NAVHOST
+      NEXT WE HAVE TO DECLARE OUR NAVHOST
           
           
           
