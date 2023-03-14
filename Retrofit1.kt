@@ -145,6 +145,41 @@ There many be some otional headers on the request header
 In the request body we can even send a message to telll the user that the profile has been created succesfully.
 
 
+STETUS CODES
+
+Status Code Range                               meaning
+100's                                            Informational
+200's                                            Success
+300's                                            Redirects
+400's                                            Client Error
+500's                                            Server error'
+
+All of this status codes are sent to the client .In our case is the  mobile phone
+
+
+
+
+WEB SERVICES
+
+We have a client(mobile phone) and a web server
+Inside the web server we have a web service
+A web service is a program in the webserver that reads the http request and offer the hhtp response
+
+
+  RESTFUL WEB SERVICE
+What makes a web service restful
+
+- It si estableshed through a stateless client-server relationship
+- Thses services relie on http methods i.e GET PUT POST DELETE
+- Restfull communication oocurs through structured and consistent URLs  e.g delete http:/google.com ,update http:/google.com . The url google.com remains constent.
+- They can use diffferent data types to transfer information // Mostly json is used to transfer data.
+
+
+
+
+
+
+
 
 
 
