@@ -386,7 +386,6 @@ private val Okhttp = OkHttpClient.Builder().addInterceptor(logger)              
 HOW DO WE  RETRIEVE DATA FROM WEB SERVICE USING REQUEST PARAMETERS
 ______________________________________________________________________________________________________________________________________
 
-
 This section covers
 - Understanding request parameters
 - Using Path parameters
@@ -443,6 +442,68 @@ www.smartherd.com/users?count=3&country=india
 This retrieves the first three uses who belong to inda
 
 
+
+
+
+
+Using path parameters in retrofit
+______________________________________________________________________________________________________________________________________
+
+
+
+TO USE PATH PA RAMERS IN OUR RETROFIT ,GO TO THE INTERFACE CLASS
+
+interface  DestinationServe {
+
+	@GET("destination")
+	fun getDestinationList():Call<List<Destination>>
+	
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Calll<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
+
+
+
+
+THEN IN OIR ACTIVITY WE CAN FET THE RESOURSE IN TH PATH BY
+
+
+
+
+class DestinationListActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+	
+	//
+
+        val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+        val requestCall = destinationService.getDestination(ID) here we pass the id of the object we  desires to aceess
+	    
+	                                               //Here we are only returning one destination hence we did not put list
+	            requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Calll<Destination>,response:Response<Destination>){
+                here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+                        val destinationsItem = response.body!!//Here we get the data that was sent
+                    //Here we can consume the sent data
+                        destiny_recycler_view.adapter = DestinationAdapter(destinationsList)
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+                    
 
 
 
