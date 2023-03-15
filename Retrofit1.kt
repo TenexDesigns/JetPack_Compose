@@ -223,8 +223,224 @@ destinationService.getDesination()
 
 
 
+STEP 1--Make an interface
+package com.smartherd.globofly.services
+import com.smartherd.globofly.models.Destination
+import retrofit2.Call
+import retrofit@.http.GET
 
 
+//  The purpose of this interface is to create functions that will map to our web service end point urls
+//Our interface is useles unless we implememnt a class that instanciates this interface. That is wy we created the Service builder file
+interface  DestinationServe {
+
+	@GET("destination")
+	fun getDestinationList():Call<List<Destination>>
+}
+
+
+
+       
+STEP 2 MAKE A SERVICE
+
+
+package com.smartherd.globofly.services
+
+
+object ServiceBuilder{
+
+    //When this url is combined with the value in our @GET method in the intercae ,we then we get a complete url e,g 'http://10.0.2.2:9000/destinations'
+    private const val URL = 'http://10.0.2.2:9000/'
+
+    // Create okHTTP Client
+    //This client will hep us create the retrofit builder
+    private val Okhttp = OkHttpClient.Builder()
+
+    //CREATE RETROFIT BUILDER
+    private val builder = Retrofit.Builder().baseUrl(url) //Here we pass the url that we created above
+                                  .addConverterFactory(GSONConverterFactory.create())// This is used to convert the data received from json to data and data from app to json
+                                  .client(okhttp.build())//Here we pass the okhhtp client we created above
+
+
+    //In our activity we use this menthod to receive the interface that contains our methods
+
+    fun <T> buildService( serviceType:class <T>): T {
+        return retrofit.create(serviceType)
+
+    }}
+
+
+STEP THREE -> WITIN YOUR ACTVITY You have to initialize your service in the activity then call the functions in the interface
+
+
+
+
+HERES HOW IT IS GOING TO BE IN OUR C=ACTVITY
+
+
+class DestinationListActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+
+                                                           //Here we pass the interface class
+        val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+                         //We use the above variable to aceess the get method in our interface class
+        val requestCall = destinationService.getDestination()
+
+
+        ///Here we use the enquuq method to make an asynchronous calll to our web service in the backthread
+//        ther also other methods of the callback mrthod
+//                e.g isExcuted - return boolrean if something is excuted
+//        cancel - to cancel a request
+//        isCancelled- return true if request was cancellled
+//        excute-Excutes things on main thread ,e.g splach screen.But we really do hthis.
+        requestCall.enqueue(object:CallBack<List<Destination>>){
+
+            //Here we overide two functions.The on reponse and the onfailure method
+            overide fun onResponse( call:Calll<List<Destination>>,response:Response<List<Destination>>){
+                here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+                        val destinationsList = response.body!! //Here we get the data that was sent
+                        //Here we put the destinations receib=ved in an adapter to be displayed ,or recycler view
+                        destiny_recycler_view.adapter = DestinationAdapter(destinationsList)
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+                    
+                    
+                    HERES HOW WE HANDLE HTTP RESPONSE AND ERROE
+                    If you receive a tststus code in the range of 200- 299
+                    Then the response.isSuccesful is excuted
+                    else Then the else bolcock is escuted.
+                    We can even target specfic ststsus codes such as 401
+                    
+            }
+
+//             This on failure is only excuted incase of network error or error when establishing connection with server
+//           or error creating http request or error processing http response
+            overide fun onFailure(call<List<Destination>>,t:Throwable){
+
+            }
+        }
+        }
+        }
+
+
+LOGGING INTERCEPTRO:LOG HTTP REQUEST AND RESPONSE
+______________________________________________________________________________________________________________________________________
+
+LOGGING : This using logs to intercept http requests and reponses
+
+The logging interceptor requires this dependecy
+implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+
+Add this code in the Service builde
+
+private val logger = HttpLoggingInterceptor().setLeve(TttpLogingInterceptor.level.Basic)// There foru different levels i.e BASIC,
+private val Okhttp = OkHttpClient.Builder().addInterceptor(logger)                                                                                                                     BODY
+                                                                                                                           HEADERS
+                                                                                                                           NONE
+          BASIC - REVEALS the follwing
+                  Http Method
+                  Request size
+                  Response size
+                  Status code
+                
+          HEADERS-REVEALS the follwing
+                  Headers                                  
+                  Http Method
+                  Request size
+                  Response size
+                  Status code
+                
+          BODY- REVEALS the follwing
+                  Request body
+                  Response body
+                  Headres
+                  Http Method
+                  Request size
+                  Response size
+                  Status code
+                
+          BASIC - REVEALS the follwing
+                  Http Method
+                  Request size
+                  Response size
+                  Status code
+                
+
+
+
+
+
+HOW DO WE  RETRIEVE DATA FROM WEB SERVICE USING REQUEST PARAMETERS
+______________________________________________________________________________________________________________________________________
+
+
+This section covers
+- Understanding request parameters
+- Using Path parameters
+- Using Query parameters
+- Handling multiple query parameters by using querymap
+- Requestinf resource from differnt web service
+
+
+
+UNDERSTANDING REQUEST PARAMETES
+
+www.smartherd.com/users/47 ---------> /47  e.g Here we have a url to go and get as user 47
+
+
+www.smartherd.com/users?COUNT=3 ---------> count =3  Here we have a url with a questionn mark then a field name ans a field value
+www.smartherd.com/users?OCCUPATION = DOCTOR   ----------> occupation=doctor
+
+
+www.smartherd.com/users?count=3&country=india --------> count=3&country=india
+
+
+ALL OF THESE SEGMENTATIONS YOU SEE ABOVE ARE ACTUALY REQUEST PARAMETERS.
+They help a web server understand what a client is basicaly looking for.
+
+
+CONSTRUCTING URL IN RESTROFIT
+
+There are two ways of constructing retrofit url
+
+
+PATHparameters
+Wghere you add segments to a url
+You use this if you want a particular resource
+The example below retrieves a user who has a id of 47
+
+E.G
+www.smartherd.com/users/47 -
+
+
+
+Query parameters
+Where you add Strings to a url
+Use this if you want to sort or filter items
+
+e.g
+www.smartherd.com/users?COUNT=3 /// This retrieves the first three users
+www.smartherd.com/users?OCCUPATION = DOCTOR // This retrives uses whoses occuptaion is being a doctor
+
+
+When you have lost of query parameter ,the  use a query map
+
+
+www.smartherd.com/users?count=3&country=india 
+This retrieves the first three uses who belong to inda
 
 
 
