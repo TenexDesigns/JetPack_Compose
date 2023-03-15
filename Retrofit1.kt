@@ -799,14 +799,175 @@ requestCall.enqueue(object:CallBack<Destination>){
 		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
 
             }
+				
+				
+
+				
+				
+				
+				
+				
+				
+Sending Data to the web service				
+______________________________________________________________________________________________________________________________________
+
+		    The section covers
+		    
+		    - Send Data to server
+		      -In request body of HTTP request
+		    Two types of data format in request body
+		        JSON
+		        FormURL encoded
+		    Complete CRUD operation
+		      POST
+		      PUT
+		    DELETE
+		    We can also send data through the  headwers 
+		    -We can modifyheaders staticaly and dynamicaly
 
 
 
+		    
+ POST REQUEST
+______________________________________________________________________________________________________________________________________
+
+		    
+Add data to server 
+
+		    
+		    DO YOU REMEMBER THE HTTP REQUEST STRUCTURE
+		    
+		    
+		    REquest line - Method ,URL, HTTP versuin
+		    Request Headers :Meta data
+		    Request Body : Send data to server. This data can be in form of json or FormUrlEncoded
+		    
+		    LET US LEARN TO SEND DATA USING BOTH FORMATS
+		    
+		    
+		    JSON FORMAT
+		    
+		    REQUEST LINE : Method ,URL,               HTTP version
+		                  post    loaclhost/students  http/1.1
+
+		    Request Headers  - Meta data 
+		    content -Type application/json
+		    
+		    Request Body: Send data to server
+		    e.g {
+			    "name":"Joseph",
+			    "age" : 17,
+			    "gender": "male"
+		    
+		    
+		    }
+		    
+		    
+		    
+		    HERES AN EXAMPLE
+		    
+		    
+		    First we have to add a @Post method in the interface
+		    
+		    		    
+interface  DestinationServe {
+	
+	//Here we put the url that will be used to addd the database
+	@POST("destination")                               //Some times the created object can be returned to show the use,Here we receive it
+	fun addDestination(@Body newDestination:Destination):Call<Destination>
+	// Here the reterofit conversts the data received to json to be sent.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@GET("destination")
+	//But for this,you also have to configure your server so that it can filter the data according to the parameters received
+	                     // Here we pass the @Quuery in the parenthesis of the destination function and add the contry prameter that will be used to filter our data,in this cas the parameter is country.
+	fun getDestinationList(@QueryMap filter:HashMao<String,String>):Call<List<Destination>>
+	
+	
+	
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
 
 
+NOW IN OUR ACTIVITY ,WE HAVE TO SEND THE DATA
+		    
+		    
+		    
+		    buttonAdd.setOnClickListener{
+			                         //This i the data  class we created ,to match the data base we are sendinf
+			    val newDestination = DEstination()
+			    
+			    newDestination.city = e_city.text.tostring()
+			    newDestination.description = e_description.text.tostring()
+			    newDestination.name = e_name.text.tostring()
+			    
+			    To send the data we create the  service
+			    
+			    val destinationService  ServerBuilder.buildService(DestinationService::class.java)
+			    val requestCall = destionService.addDestinaion(newDestination)
+			    
+			    
+			    // Then here we make a network call in the bckground
+			    
+			    requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Call<String>,response:Response<String>){
+               // here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+			    finisg() // Move back to DestinationAcitity
+			    var newDestination = reponse.body()
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+			    
+		
 
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+		    
+		                overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
 
-
+            }
+			    
+		    
+		    
+		    
+		    
+		    
+		    
+		    }
+	    
+	    NOW WHEN EVER THE APP IS RESUMEND WE HAVE TO RELOAD OUR  APP DATA
+				    
+				    onREsume(){
+					    Loaddata() // This will redo the fetching of the data when the user comes back to the  app
+				    
+				    }
+		    
+		    
+		    
 
 
 
