@@ -163,7 +163,7 @@ WEB SERVICES
 
 We have a client(mobile phone) and a web server
 Inside the web server we have a web service
-A web service is a program in the webserver that reads the http request and offer the hhtp response
+A web service is a program in the webserver that reads the http request ,process it and offer the hhtp response
 
 
   RESTFUL WEB SERVICE
@@ -173,6 +173,57 @@ What makes a web service restful
 - Thses services relie on http methods i.e GET PUT POST DELETE
 - Restfull communication oocurs through structured and consistent URLs  e.g delete http:/google.com ,update http:/google.com . The url google.com remains constent.
 - They can use diffferent data types to transfer information // Mostly json is used to transfer data.
+
+
+GETTING STARTED WITH RETEROFIT
+
+To get started with retrofit ,you need to ask user for permission to acess internent
+
+ <uses-permission android:name="android.permission.INTERNET"/>
+
+  
+  Then you need to add the retrofit  and GSON dependeancy
+
+    // retrofit
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+   // GSON
+//Gson is used to convert the json received to data user can use ,and convert user data to json.
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+
+STEPS INVOLVED IN MAKING THE RETROFIT WORK.
+
+STEP 1
+Make an interface
+
+This interface will contain functions that will map to the endpoints urls of your web service
+e.g the @GET
+       getDestination()
+       
+       @DELETE
+       deleteDEstination()
+       
+        
+STEP 2
+MAKE A SERVICE
+You have to create a service that will help you call the functions in the the interface 
+e.g
+createService( <T> Service)
+-> destinationService
+
+STEP 3
+As the last step.WITIN YOUR ACTVITY
+You have to initialize your service in the activity then call the functions in the interface
+
+e.g
+destinationService.getDesination()
+
+
+
+
+
 
 
 
