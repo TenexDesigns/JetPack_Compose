@@ -20,7 +20,7 @@ HTTP fundamentals
 Web services - create your own local web server
 Retrofit - To get your app online. 
 
-
+ 
 
 LETS GET STARTED
 
@@ -318,17 +318,18 @@ class DestinationListActivity : AppCompatActivity() {
                     }
                     
                     
-                    HERES HOW WE HANDLE HTTP RESPONSE AND ERROE
-                    If you receive a tststus code in the range of 200- 299
-                    Then the response.isSuccesful is excuted
-                    else Then the else bolcock is escuted.
-                    We can even target specfic ststsus codes such as 401
+//                     HERES HOW WE HANDLE HTTP RESPONSE AND ERROE
+//                     If you receive a tststus code in the range of 200- 299
+//                     Then the response.isSuccesful is excuted
+//                     else Then the else bolcock is escuted.
+//                     We can even target specfic ststsus codes such as 401
                     
             }
 
 //             This on failure is only excuted incase of network error or error when establishing connection with server
 //           or error creating http request or error processing http response
             overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
 
             }
         }
@@ -480,7 +481,7 @@ class DestinationListActivity : AppCompatActivity() {
 	//
 
         val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
-        val requestCall = destinationService.getDestination(ID) here we pass the id of the object we  desires to aceess
+        val requestCall = destinationService.getDestination(47) //here we pass the id of the object we  desires to aceess
 	    
 	                                               //Here we are only returning one destination hence we did not put list
 	            requestCall.enqueue(object:CallBack<Destination>){
@@ -504,6 +505,222 @@ class DestinationListActivity : AppCompatActivity() {
                     
                     }
                     
+		    
+               overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+
+            }
+
+
+
+		    
+		    
+USING QUERY PARAMETERS		    
+______________________________________________________________________________________________________________________________________
+
+Thses are used when you want to filter out a resource
+		    
+		    
+		    To do this we ahve to go to our interface class
+		    
+interface  DestinationServe {
+
+	@GET("destination")
+	                     // Here we pass the @Quuery in the parenthesis of the destination function and add the contry prameter that will be used to filter our data,in this cas the parameter is country.
+	fun getDestinationList(@Query("country")country:String):Call<List<Destination>>
+	
+	
+	
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
+
+
+
+Then in our activity we have to pass the name of the country
+		    
+		    
+		    
+ class DestinationListActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+	
+	//
+
+        val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+        val requestCall = destinationService.getDestination("india") //here we pass the nameof the country we woulf like to see
+	    
+	                                               //Here we are only returning one destination hence we did not put list
+requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Calll<Destination>,response:Response<Destination>){
+                here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+                        val destinationsItem = response.body!!//Here we get the data that was sent
+                    //Here we can consume the sent data
+                        destiny_recycler_view.adapter = DestinationAdapter(destinationsList)
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+	    overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+
+            }
+		    
+		    
+		    
+		    
+		    
+USING QUERY MAPS PARAMETERS		    
+______________________________________________________________________________________________________________________________________
+		    
+                    
+Use query maps when you have multiple parameters to issue
+		    
+		    
+		    To do this we ahve to go to our interface class
+		    To pass multiple parameters we just add them to the others ,we can make them nullable since user can choose to use them or not
+		    
+interface  DestinationServe {
+
+	@GET("destination")
+	//But for this,you also have to configure your server so that it can filter the data according to the parameters received
+	                     // Here we pass the @Quuery in the parenthesis of the destination function and add the contry prameter that will be used to filter our data,in this cas the parameter is country.
+	fun getDestinationList(@Query("country")country:String?,@Query("count")count:String?):Call<List<Destination>>
+	
+	
+	
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
+
+
+
+
+
+Then in our activity we have to pass the name of the country
+		    
+		    
+ class DestinationListActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+	
+	//
+
+        val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+        val requestCall = destinationService.getDestination("india",1) //here we pass the nameof the country we woulf like to see
+	    
+	                                               //Here we are only returning one destination hence we did not put list
+	            requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Calll<Destination>,response:Response<Destination>){
+                here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+                        val destinationsItem = response.body!!//Here we get the data that was sent
+                    //Here we can consume the sent data
+                        destiny_recycler_view.adapter = DestinationAdapter(destinationsList)
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+          overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+
+            }
+		    
+		    
+		    
+		    HOW EVER IN YOUR APP YOU CAN NOT PUT ALL OF YOUR CUERRY IN THE  INTERFACE PARANTHESI S, AS SOMETIMES THEY MAY BE TOO MANY
+		    For that we have to use a query map
+
+
+
+
+
+
+		    
+interface  DestinationServe {
+
+	@GET("destination")
+	//But for this,you also have to configure your server so that it can filter the data according to the parameters received
+	                     // Here we pass the @Quuery in the parenthesis of the destination function and add the contry prameter that will be used to filter our data,in this cas the parameter is country.
+	fun getDestinationList(@QueryMap filter:HashMao<String,String>):Call<List<Destination>>
+	
+	
+	
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
+
+
+
+
+
+In the activity we have to pass a hash map that taes the form of key value pair.
+There we have to pass the field  name nad value of the desire things we would like to filter.
+		    
+		    
+		    
+class DestinationListActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+	
+	//
+
+        val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+	val filter = HashMap<string,string>()
+	fiter["country"] = "india"
+	filter["count] = "1"
+	
+        val requestCall = destinationService.getDestination(filter) //here we pass the nameof the country we woulf like to see
+	    
+	                                               //Here we are only returning one destination hence we did not put list
+	            requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Calll<Destination>,response:Response<Destination>){
+                here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+                        val destinationsItem = response.body!!//Here we get the data that was sent
+                    //Here we can consume the sent data
+                        destiny_recycler_view.adapter = DestinationAdapter(destinationsList)
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
 
 
 
@@ -511,30 +728,77 @@ class DestinationListActivity : AppCompatActivity() {
 
 
 
+RETRIVE DATA FROM A DIFFRENET SERVER OR ALTERNATE URL
+______________________________________________________________________________________________________________________________________
 
+		    
+		    To fetch data from another url ,we have to create another interface class
+		    
+		    
+		    
+		    
+		    interface MessageService{
+			    
+			    
+			    @GET()
+			    fun getMessages(@Url anotherUrl:string)Call<String>
+	
+		    
+		    
+		    
+		    }
+		    
+		    
+		    
+		    NOW IN OUR ACTIVITY WE HAVE TO USE THE SERVOCE BUILDER CLASS AND PSSS THE ABOVE MESSAGEsERVE AS A PARAMETER
+		    
+		    
+		    
+class WelcomeActivity : AppCompatActivity() {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_destiny_list)
+	
+	
+	
+	                                                // Here we use the above create instance
+        val messageService = ServiceBuilder.buildService(MessageService::class.java)
+	Then here we pass the other url we want to access it.
+	val requestCall = messageService.getMessages("http:127.0.33:700/messages") 
+	
+	
+	//THEN HERE WE MAKE THE ASYNCHRONOUS NETWORK CALL TO THE SERVER
+		                                               //Here we are only returning one destination hence we did not put list
+requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Call<String>,response:Response<String>){
+               // here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+			    val msg:String? = response.body()
+			    msg?.let{
+				    
+				    ttitlbar.text = msg
+			    
+			    }
 
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+		    
+		                overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            }
 
 
 
