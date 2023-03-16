@@ -851,7 +851,7 @@ Add data to server
 		                  post    loaclhost/students  http/1.1
 
 		    Request Headers  - Meta data 
-		    content -Type application/json
+		    content -Type: application/json
 		    
 		    Request Body: Send data to server
 		    e.g {
@@ -973,30 +973,370 @@ NOW IN OUR ACTIVITY ,WE HAVE TO SEND THE DATA
 
 
 
+UPDATE /REPLACE EXISTING RESURCE IN THE  SERVER
+______________________________________________________________________________________________________________________________________
+
+	HERE WE ARE GOING TO SEND THE DATA IN THE FORMURLENCODED FORMAT	
+				    
+				    Request Line : Method ,Url, Httpp version
+				    
+				    PUT  localhost/students/17/ http/1.1
+				    
+				    Request Headers : Meta Data
+				    
+				    Content-Type : application/x-www-form-urlencoded
+				    
+				    Request Body : Send data  to server
+				    
+				    E.g FormUrlEncoded data for Student Object
+				    
+				    name = Joseph&age=17&gender=male
+				    
+				    
+				    BUT IT IS ADVICED TO JUST USE JSON ,BECAUSE FORM URL IS TOO COMPLEX AND BIG
+				    
+				    
+				    
+
+		    JSON FORMAT
+		    
+		    REQUEST LINE :         Method        ,URL,               HTTP version
+				           PUT      localhost/students/17/   http/1.1
+
+		    Request Headers  - Meta data 
+		    content -Type: application/json
+		    
+		    Request Body: Send data to server
+		    e.g {
+			    "name":"Joph",
+			    "age" : 27,
+			    "gender": "female"
+		    
+		    
+		    }
 
 
 
 
 
 
+interface  DestinationServe {
+	
+	@POST("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun changeDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-
+	
+	
+	
+	
+	//Here we put the url that will be used to addd the database
+	@POST("destination")                               //Some times the created object can be returned to show the use,Here we receive it
+	fun addDestination(@Body newDestination:Destination):Call<Destination>
+	// Here the reterofit conversts the data received to json to be sent.
+
+
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
 
 
 
+THEN WE MOVE TO THE BUTTON WEHERE WE WANT TO UPDATA ,IN OUR ACTIVITY
+				    
+				    
+				    
+				       
+		    buttonAdd.setOnClickListener{
+			                         //This i the data  class we created ,to match the data base we are sendinf
+			    val newDestination = DEstination()
+			    
+			    newDestination.city = e_city.text.tostring()
+			    newDestination.description = e_description.text.tostring()
+			    newDestination.name = e_name.text.tostring()
+			    
+			    To send the data we create the  service
+			    
+			    val destinationService  ServerBuilder.buildService(DestinationService::class.java)
+			    val requestCall = destionService.updateDestinaion(newDestination)
+			    
+			    
+			    // Then here we make a network call in the bckground
+			    
+			    requestCall.enqueue(object:CallBack<Destination>){
+                                                                               
+            overide fun onResponse( call:Call<Destination>,response:Response<String>){
+               // here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+			    finisg() // Move back to DestinationAcitity
+			    //Here we get the updated item which you can use it or ignore it.
+			    var newDestination = reponse.body()
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+			    
+		
+
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+		    
+		                overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+
+            }
+			    
+		    
+		    
+		    
+		    
+		    
+		    
+		    }
 
 
+DELETE A RESOUSE
+______________________________________________________________________________________________________________________________________
+	    
 
 
+				    
+				    To delete a resource we have to make a  delete interface function
+				    
+interface  DestinationServe {
+	
+	@DELETE("destination/{id}")
+	fun deleDestination(@path("id")id:Int):Call<Unit>  // restfull api usually do not return anything after a resource has beeen deleted
+	
+	
+	
+	@POST("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun changeDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-
+	
+	
+	
+	
+	//Here we put the url that will be used to addd the database
+	@POST("destination")                               //Some times the created object can be returned to show the use,Here we receive it
+	fun addDestination(@Body newDestination:Destination):Call<Destination>
+	// Here the reterofit conversts the data received to json to be sent.
 
 
+	//HERES HOW TO USE PATH PARAMETERS
+	@GET("destination/{id}")  //Here we add apart on our destiantion to the pathh of the id of our user
+	fun getDestination(@Path("id")id:Int):Call<Destination>  // Here we receive the ide fro the user in the id:Int ,then we pass this isd to the path,o that it can be added to the destination so that our url will look something like this http:??nase-url/destination/47
+}
+
+				    
+
+NOW IN OUR DELETE BUTTON
+				    
+				    
+				       buttonAdd.setOnClickListener{
+	
+			    
+			    val destinationService  ServerBuilder.buildService(DestinationService::class.java)
+			    val requestCall = destionService.updateDestinaion(17)
+			    
+			    
+			    // Then here we make a network call in the bckground
+			    
+			    requestCall.enqueue(object:CallBack<Unit>){
+                                                                               
+            overide fun onResponse( call:Call<Unit>,response:Response<Unit>){
+               // here we check if the reponse was suucsfull
+                    if(response.isSuccesfull){
+			    
+			    finisg() // Move back to DestinationAcitity
+			    //Here we get the updated item which you can use it or ignore it.
+			    var newDestination = reponse.body()
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+			    
+		
+
+                    }
+                    else if(response.code()==401){
+                      
+                      Toast.makeText(this@DestinationListActivity, "Your session expired",Toast.LENGHT_Long).show()
+                    
+                    } else{
+                      Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+                      
+                      
+                    
+                    }
+		    
+		                overide fun onFailure(call<List<Destination>>,t:Throwable){
+		    Toast.makeText(this@DestinationListActivity, "failde to retrieve items",Toast.LENGHT_Long).show()
+
+            }
+			    
+		    
+		    
+		    
+		    
+		    
+		    
+		    }
+
+	    
+
+	    ROLE OF INTERCEPTORS
+______________________________________________________________________________________________________________________________________
+	    
+
+				    There are interceptors for the following roles
+				    
+				    LOGGING
+				    Http headers
+				    Authentication
+				    Error Handling
+				    
+				    
+				    
+				    Let us see how to make custom interceptor
+				    We put this code in the ervice builder,same as we didithe  loggging
+				    
+				    
+				    val headerInterceptor = object:Interceptor{
+					    
+					    overide fun intercept(chain:Interceptor.chain):Response{
+						    
+						    
+						    val request = chain.request()
+						    
+						    
+						    request = request.newBuilder()
+						                     .addHeader("Accept-Langguage",locale.getDefault().language)// This gets the default language on the device
+								     .addHeader("x-device-type",Build.DEVICE)// This gets device name
+								     .build()
+								     
+						   val response = chain.proceed(request)// This proceedd with the http reuest
+						   return response
+					    
+					    
+					    
+					    
+					    
+					    
+					    }
+				    
+				    
+				    
+				    HERES THE COMPLETE VERSION
+					    
+					    
+					    object ServiceBuilder{
+
+    //When this url is combined with the value in our @GET method in the intercae ,we then we get a complete url e,g 'http://10.0.2.2:9000/destinations'
+    private const val URL = 'http://10.0.2.2:9000/'
+
+    // Create okHTTP Client
+    //This client will hep us create the retrofit builder
+    
+    private val logger = HttpLoggingInterceptor().setLeve(TttpLogingInterceptor.level.Basic)// There foru different levels i.e BASIC,
+private val Okhttp = OkHttpClient.Builder().addInterceptor(headerinterceptor)//Applie the header befor the loger
+                                           .addInterceptor(logger)
+    
+      val headerInterceptor = object:Interceptor{
+					    
+					    overide fun intercept(chain:Interceptor.chain):Response{
+						    
+						    
+						    val request = chain.request()
+						    
+						    
+						    request = request.newBuilder()
+						                     .addHeader("Accept-Langguage",locale.getDefault().language)// This gets the default language on the device
+								     .addHeader("x-device-type",Build.DEVICE)// This gets device name
+								     .build()
+								     
+						   val response = chain.proceed(request)// This proceedd with the http reuest
+						   return response
+					    
+					    
+					    
+					    
+					    
+					    
+					    }
+    
+    
+    
+
+    //CREATE RETROFIT BUILDER
+    private val builder = Retrofit.Builder().baseUrl(url) //Here we pass the url that we created above
+                                  .addConverterFactory(GSONConverterFactory.create())// This is used to convert the data received from json to data and data from app to json
+                                  .client(okhttp.build())//Here we pass the okhhtp client we created above
 
 
+    //In our activity we use this menthod to receive the interface that contains our methods
+
+    fun <T> buildService( serviceType:class <T>): T {
+        return retrofit.create(serviceType)
+
+    }}
+				    
+				    
+				    
+				    
+				    
+				    }
+					    
+					    
+RETROFIT REQUEST TIMEOUTS					    
+______________________________________________________________________________________________________________________________________
+
+					    
+					    When making http request you may run into the follwing problems
+					    
+					    Slow connnection
+					    Server taking time to respond
+					    Network issues
+					    
+					    
+					    
+					    BBy default ,all retrofit timeouts is 10 seconds
+					    So if you make a network call(recall.encuec) and it takes more than 10s then the onfailure method id excuted
+					    
+					    
+					    
+					    To change the time out ,go to your service builder and use the oHttp
+					    
+					    
+					    
+object ServiceBuilder{
+
+    //When this url is combined with the value in our @GET method in the intercae ,we then we get a complete url e,g 'http://10.0.2.2:9000/destinations'
+    private const val URL = 'http://10.0.2.2:9000/'
+
+    // Create okHTTP Client
+    //This client will hep us create the retrofit builder
+    
+    private val logger = HttpLoggingInterceptor().setLeve(TttpLogingInterceptor.level.Basic)// There foru different levels i.e BASIC,
+                          // The most recomended tim e out is 5 seconds ,after which ,you will give the user a retry button
+	private val Okhttp = OkHttpClient.Builder().calltimeout(15,Timeout.SECONDS)// This i the timeout for the entire network,there other time outs such read tim eout ,i.e time taken to read data from the netwoks ,write timeout and e.t.c
+		                           .addInterceptor(headerinterceptor)//Applie the header befor the loger
+                                           .addInterceptor(logger)
+					    
 
 
-
-
-
-
-
+CANCELING REQUESTS					    
+______________________________________________________________________________________________________________________________________
+	
+	
+	There are methods to cance the rewuest call
+	
+	requestCall.cance() - cances the call
+	requestCall.isCanceled() -returns true if request is canceled 
+	
+	
 
 
 
