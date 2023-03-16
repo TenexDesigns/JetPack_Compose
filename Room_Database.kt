@@ -80,7 +80,7 @@ With Room, we don’t need all the Cursor related code and can simply define our
 This is the place where we write our queries using annotations in the Dao class..
 
 
-DATA BASE
+DATA BASEf
 
 Contains the database holder and serves as the main access point for the underlying connection to your app’s  data.
 
