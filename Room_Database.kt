@@ -156,14 +156,6 @@ interface UserDao {
 
 
 
-
-
-
-
-
-
-
-
 USER
 
 package com.example.tenexapp.data
@@ -260,7 +252,312 @@ import android.content.Context
 
 
 
+ 
+ 
 
+
+
+Room Persistence Library
+Room Database is now highly recommended for local storage in Android development and one of the android jetpack’s 
+  architecture components. It is a wrapper for SQL DB, maps database objects to java objects automatically, 
+  and reduces boilerplate code.
+
+It has 3 main components:
+1. Database — Abstract class or Singleton
+2. Entity (table) — Data class
+3. DAO (Database Access Object) — Interface class, it makes queries on the Entity using API.
+
+
+
+
+
+
+Add/Edit Employee Detail 
+We have an HR Operations app where HR can Add/Update Employee details.
+  For this purpose, we will use Room DB to store all employee’s details. I have used a dagger-hilt for dependency injection.
+
+Let’s see step by step how it works with Compose.
+
+Setup Room: Add the below dependencies in your build.gradle file.
+  // Room Local DB
+    def room_version = "2.4.3"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+
+
+Prepare a Table: Make a Data class Employee.kt using annotation Entity. In this example, we have made employees data Entity,
+  which represents the employees table in DB, and each variable 
+  inside it represents a column inside the table. You can declare column details using the annotation ColumnInfo.
+
+
+@Parcelize
+@Entity(tableName = "employees")
+data class Employee(
+
+    @PrimaryKey(autoGenerate = false)
+    @NonNull
+    @ColumnInfo(name = "id")
+    var id: Int,
+
+    @ColumnInfo(name = "employeeId")
+    var employeeId: Long,
+
+    @ColumnInfo(name = "employeeName")
+    var employeeName: String,
+
+    @ColumnInfo(name = "designation")
+    var employeeDesignation: String,
+
+    @ColumnInfo(name = "experience")
+    var empExperience: Float,
+
+    @ColumnInfo(name = "email")
+    var empEmail: String,
+
+    @ColumnInfo(name = "phoneNo")
+    var empPhoneNo: Long
+) : Parcelable
+  
+  
+  
+  
+  Prepare Queries: Make an interface class EmployeeDao.kt and annotate with Dao (Data Access Object). 
+  In this class, we need to declare all queries to fetch data from our table. We have annotations available to Insert,
+  Update or Delete the record from the table in DB. For others, we need to use Query annotation.
+DAO checks for queries on compile time & gives an error if found any.
+  
+  
+  
+
+@Dao
+interface EmployeeDao {
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addEmployee(employee: Employee)
+
+    @Query("SELECT * FROM employees WHERE employeeId = :empId")
+    fun findEmployeeById(empId: String): Employee
+
+    @Query("SELECT * FROM employees")
+    fun getAllEmployees(): List<Employee>
+
+    @Update
+    suspend fun updateEmployeeDetails(employee: Employee)
+
+    @Delete
+    suspend fun deleteEmployee(employee: Employee)
+}
+
+
+
+Create a Room DB: Create an abstract class EmployeeRoomDatabase.kt using the annotation Database and extend RoomDatabase.
+  Declare a list of entities, version, etc. EmployeeRoomDatabase 
+  class must define an abstract method that has zero arguments and returns an instance of the EmployeeDao class.
+
+
+  @Database(entities = [(Employee::class)], version = 1, exportSchema = false)
+abstract class EmployeeRoomDatabase : RoomDatabase() {
+
+    abstract fun employeeDao(): EmployeeDao
+
+    companion object {
+        /*The value of a volatile variable will never be cached, and all writes and reads will be done to and from the main memory.
+        This helps make sure the value of INSTANCE is always up-to-date and the same for all execution threads.
+        It means that changes made by one thread to INSTANCE are visible to all other threads immediately.*/
+        @Volatile
+        private var INSTANCE: EmployeeRoomDatabase? = null
+
+        fun getInstance(context: Context): EmployeeRoomDatabase {
+            // only one thread of execution at a time can enter this block of code
+            synchronized(this) {
+                var instance = INSTANCE
+
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        EmployeeRoomDatabase::class.java,
+                        "employee_database"
+                    ).fallbackToDestructiveMigration()
+                        .build()
+
+                    INSTANCE = instance
+                }
+                return instance
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+Prepare Repository to access DAO: Make a Repository class EmployeeRepository.kt and add our Dao class to the constructor.
+  Using the coroutine repository will access Dao to fire a query on the table.
+  In the below code, the addEmployee method of employeeDao class is accessed inside a coroutine scope.
+
+
+class EmployeeRepository(private val employeeDao: EmployeeDao) {
+
+    val allEmployees = MutableLiveData<List<Employee>>()
+    val foundEmployee = MutableLiveData<Employee>()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    fun addEmployee(newEmployee: Employee) {
+        coroutineScope.launch(Dispatchers.IO) {
+            employeeDao.addEmployee(newEmployee)
+        }
+    }
+
+    fun updateEmployeeDetails(newEmployee: Employee) {
+        coroutineScope.launch(Dispatchers.IO) {
+            employeeDao.updateEmployeeDetails(newEmployee)
+        }
+    }
+
+
+
+
+
+
+Make a ViewModel class HomeViewModel.kt, which will interact with the repository class to get data from DB.
+
+
+
+  
+  @HiltViewModel
+class HomeViewModel @Inject constructor(private val employeeRepository: EmployeeRepository) :
+    ViewModel() {
+
+    val employeeList: LiveData<List<Employee>> = employeeRepository.allEmployees
+
+    val foundEmployee: LiveData<Employee> = employeeRepository.foundEmployee
+    
+    fun getAllEmployees(){
+        employeeRepository.getAllEmployees()
+    }
+
+    fun addEmployee(employee: Employee) {
+        employeeRepository.addEmployee(employee)
+        getAllEmployees()
+    }
+
+    fun updateEmployeeDetails(employee: Employee) {
+        employeeRepository.updateEmployeeDetails(employee)
+        getAllEmployees()
+    }
+
+
+
+
+
+
+Make a function in ComponentActivity: In AddEditEmployeeScreen class, make a function to fire a query & get a result from
+      EmployeeRoomDatabase.
+      For this purpose, we will use our HomeViewModel class where all methods are already defined.
+
+      
+      fun addEmployeeInDB(
+    context: Context,
+    navController: NavHostController,
+    employee: Employee,
+    homeViewModel: HomeViewModel
+) {
+    homeViewModel.addEmployee(employee)
+    navController.popBackStack()
+}
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      Call the addEmployeeInDB function on the button click and add an employee detail to our DB.
+      
+            Button(onClick = {
+                        if (isEdited) {
+                            val employee = Employee(
+                                id = if (isEdit) selectedEmployee.id else empId.trim().toInt(),
+                                employeeId = empId.trim().toLong(),
+                                employeeName = empName,
+                                employeeDesignation = empDesignation,
+                                empExperience = empExp.toFloat(),
+                                empEmail = empEmailId,
+                                empPhoneNo = empPhoneNumber.toLong()
+                            )
+                            if (isEdit) {
+                                updateEmployeeInDB(mContext, navController, employee, homeViewModel)
+                            } else {
+                                addEmployeeInDB(mContext, navController, employee, homeViewModel)
+                            }
+                            clearAll()
+                        }
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      That’s a wrap for now! Many more Jetpack Compose topics to come🔥
+You can access the source code from Github.
+I hope you find this blog helpful.
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 
 
 
