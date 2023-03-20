@@ -248,7 +248,36 @@ You can not implement something using an interface
          
          TO SOLVE THIS PROBLES WE USE TWO
          @Provides -WHich is easuer and works in all cenaries
-         @Binds- Which is more complex and doen't always work in all scneials
+         @Binds- Which is more complex and doent always work in all scneials
+         
+         
+_________________________________________________________________________________________________________________________________________________-          
+         
+         
+         @PROVIDES
+         
+         
+         
+         
+         
+         
+         
+                  //There we plovide the scope of the hilt
+         @InstllIn(ApplicationComponrnt::Class)
+         @Module
+         class MyModule{
+           
+           @Singleton//Here we use the identifier for the application scope
+           @Provides
+           fun provideSomeInterface():SomeInterface{
+             
+             return someInterfaceImplenttatio()
+           }
+         
+         
+         
+         }
+         
 
 
 
