@@ -1,4 +1,6 @@
 There is a compose sate used to access data in our view models
+1.Using stateFlow allows you to use flow operaturs e.g map ,filter,combined
+2. They are easier to deal with process death.
 
 
 Here is an example of how we use the stateflow
@@ -42,9 +44,35 @@ THIS IS HOW WE ACCESS THE DATA IN THE VIEW MODEL IN OUR COMPOSABLE
 
         }
     }
-
-
     
+  
+  
+  
+  
+  
+  
+  PROCESS DEATH
+__________________________________________________________________________________________________________________________________________
+
+oR WE CAN MAKE THESE VARIABLES IMUNE TO DATA LOSS WHEN THE ANDROID SYSYTEM KILLS THE APP TO SAVE ON MEMEORY
+
+
+    class MainViewModel:ViewModel(
+      private val savedStateHandle:savedStateHandle
+    ) {
+      var color = savedStateHandle.getStateFlow("color",0xFFFFFFF)
+
+
+    fun generateNewColor() {
+      // Tis genrates a random color 
+
+        val color1 = Random.nextLong(0xFFFFFFFF)
+        savedStateHandle["color"] = color1
+
+
+    }
+
+}
     
     
     
