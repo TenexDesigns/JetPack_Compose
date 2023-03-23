@@ -128,11 +128,11 @@ class MaoinActivity : ComponentActivity() {
     
     NOW THIS IS MORE EXPLANATION
     
- val someActivityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.SomeContract()) { result ->
+ val Launcher = rememberLauncherForActivityResult(ActivityResultContracts.SomeContract()) { result ->
     // Handle the result
 }
 
-Button(onClick = { someActivityResultLauncher.launch() }) {
+Button(onClick = { Launcher.launch() }) {
     Text(text = "Launch Activity")
 }
 
@@ -140,6 +140,23 @@ Button(onClick = { someActivityResultLauncher.launch() }) {
 In Jetpack Compose, rememberLauncherForActivityResult and registerForActivityResult are both used to handle the
     results of an activity launched with an Intent. However, they are used slightly differently in Compose than in 
     traditional Android development.
+    
+Always use  rememberLauncherForActivityResult()  because it is used in a composable ,and when the ui is changed,the composable function comtaining it 
+    will be recomposed,but the registerForActivityResult you need to destroy it in the on Destroy method i.e launcher.destroy()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 rememberLauncherForActivityResult is used to create a ActivityResultLauncher that can be used to launch an activity and handle its result. 
     This method is typically used in a Composable function to launch an activity and receive the result. Heres an example of how to use it:
