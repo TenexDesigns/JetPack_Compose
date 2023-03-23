@@ -119,19 +119,64 @@ Column(modifier = Modifier.padding(16.dp)) {
     This view model holds and exposes this name in a live data    which can be observed as satte and passed to a composable. 
     
     
+class HomeViewModel: ViewModel(){
+    private val _name = MutableLiveData("") // We do this so that the name can only be accessed but not changed from outside the view model
+    val name: LiveData<String> = _name
+    
+    // Here we also pass the name from the event to the live data name
+    
+    fun OnNameChange(newName:String){
+        _name.value = newName
+    
+    }
+
+}
+    Then in our state hoisting composable ,we receive the name
+@Composable
+fun ScreenBBc (Home:HomeViewModel = viewModel()) {
+        var name  by Home.name.observeAsState("")// A chnage in this will trugger a recoimposition of the book
+    // Te observe as satte ill also remmebre the state making the state survive confuiguration chnages
+
+        Books(name=name, OnNameChange = {value-> Home.OnNameChange(value)})
+
+
+    }
+    
+    
+//This is the book    
+    
+        Books(name=name, OnNameChange = {value -> name =value})
+                                                                             // The value is being passed into this function
+@Composable           //This means that a string is being passed into this function e.g OnNameChange = {value -> name =value})
+fun Books(name:String,OnNameChange:(String)->Unit)  {
+
+
+Column(modifier = Modifier.padding(16.dp)) {
+    Text(
+        text = "Hello ,$name",
+        modifier = Modifier.padding(bottom = 8.dp),
+        style = MaterialTheme.typography.h5
+
+    )
+
+
+    OutlinedTextField(
+        value = name,
+        onValueChange = OnNameChange,
+        label = { Text("Name") }
+
+    )
+}
+
+
+}
+
     
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+    We use view model to handle events and hold and expose state in an observable state holder like live data
     
     
     
