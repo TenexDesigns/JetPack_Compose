@@ -134,18 +134,17 @@ class HomeViewModel: ViewModel(){
     Then in our state hoisting composable ,we receive the name
 @Composable
 fun ScreenBBc (Home:HomeViewModel = viewModel()) {
-        var name  by Home.name.observeAsState("")// A chnage in this will trugger a recoimposition of the book
+        var name  by Home.name.observeAsState("")// A chnage in thislivedata will trugger a recoimposition of the book
     // Te observe as satte ill also remmebre the state making the state survive confuiguration chnages
 
         Books(name=name, OnNameChange = {value-> Home.OnNameChange(value)})
+  //Books(name=name, OnNameChange = {Home.OnNameChange(it)})
 
 
     }
     
     
-//This is the book    
-    
-        Books(name=name, OnNameChange = {value -> name =value})
+
                                                                              // The value is being passed into this function
 @Composable           //This means that a string is being passed into this function e.g OnNameChange = {value -> name =value})
 fun Books(name:String,OnNameChange:(String)->Unit)  {
