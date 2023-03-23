@@ -71,11 +71,20 @@ ActivityResultContracts.CaptureVideo     - An ActivityResultContract to take a v
 ActivityResultContracts.CreateDocument   - An ActivityResultContract to prompt the user to select a path for creating a new document of the given mimeType,
                                            returning the content: Uri of the item that was created.
 ActivityResultContracts.GetContent       - An ActivityResultContract to prompt the user to pick a piece of content,
-                                            receiving a content: Uri for that content that allows you to use android.content.ContentResolver.openInputStream to access the raw data.
+                                           " receiving a content: Uri" for that content that allows you to use
+                                           android.content.ContentResolver.openInputStream to access the raw data.
+                                           The input is the mime type to filter by, e.g. image/\*.
 
 ActivityResultContracts.PickContact      - An ActivityResultContract to request the user to pick a contact from the contacts app.
+                                               THE OUT PUT IS CONTENT:URI
+
+
+
 
 ActivityResultContracts.PickMultipleVisualMedia -An ActivityResultContract to use the Photo Picker to select a single image, video, or other type of visual media.
+                                            The constructor accepts one parameter maxItems to limit the number of selectable items 
+                                             The output is a list Uri of the selected media.
+
 
 ActivityResultContracts.RequestMultiplePermissions - An ActivityResultContract to request permissions
 
@@ -95,6 +104,62 @@ ActivityResultContracts.PickVisualMedia.ImageAndVideo - VisualMediaType object u
 
 you can use the StartActivityForResult contract. This is a generic contract that takes any Intent as an input and returns an ActivityResult, 
 allowing you to extract the resultCode and Intent as part of your callback, as shown in the following example:
+
+
+
+  WHAT IS THE URI RETURNED BY SOME CONTRACTS
+
+ActivityResultContracts.CaptureVideo - video is saved into the provided content-Uri.
+ActivityResultContracts.CreateDocument - returns the content: Uri of the item that was created.
+ActivityResultContracts.GetContent - the piecked content is received in a content: Uri.
+ActivityResultContracts.PickMultipleVisualMedia -The output is a list Uri of the selected media.
+e.t.c
+
+
+
+In the code you provided, uri stands for the Uniform Resource Identifier that represents the data that was selected ,captured or created 
+by the user in the activity launched using the GetContent,createDocument,cpature videor e.tc contract.
+
+The GetContent contract is a part of the Activity Result API that allows you to launch an activity to select and return data.
+In this case, it launches an activity that allows the user to select some form of content (e.g. an image, a video, a document) from their
+devices storage, and returns a URI that points to the selected content.
+
+The rememberLauncherForActivityResult function registers a callback function that will be executed when the activity completes and returns a result.
+In this case, the callback function takes a single parameter, uri, which represents the URI of the selected content.
+
+
+You can use this uri parameter to perform further operations on the selected content, such as displaying an image in
+your apps UI or processing a document. Note that the value of the uri parameter can be null if the user cancels the activity
+or an error occurs, so you should check for null values before using it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
