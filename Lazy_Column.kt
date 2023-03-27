@@ -145,7 +145,13 @@ class MainActivity : ComponentActivity() {
 
                 LazyColumn(
                     contentPadding = PaddingValues(12.dp)  //This adds a padding of 12.dp on all sides of the row
-                    vertcalArrangement = Arrangement.spaceBy(12.dp)// This puts a space of 12.dp  on each row.
+                    vertcalArrangement = Arrangement.spaceBy(12.dp)// This puts a space of 12 dp between each item int the lazy column
+                                            .Bottom    // This puts all the items at the bootom of the y axis
+                                            .Center /// This arranges all the items on the center of the y axixx
+                                            .top   // This arranges all the items at the top of the y axixs
+                                            .spaceEvenly // This spreads the space betweeen the items evenly accroos the items on the y-axix  without free space on the first and last item.
+                                            .spaceBetween  // This putse space betweeen the items across the  y-axix
+                                            .Spacearound  // This spreads the space betweeen the items evenly accroos the items on the y-axix and its puts free space on first and last item.
                 ) {
                   //Here we use items to pass our arrray of items 
                     items(items = getAllData) { person ->  // Our item method goes throught each item in our array 
