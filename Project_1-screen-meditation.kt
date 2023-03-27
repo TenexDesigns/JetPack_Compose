@@ -1,3 +1,28 @@
+This project is on this video 
+
+https://youtu.be/pS44mexN2hY?list=PLA7YMGupLhlEO1rZfuYRMRDC3YIqJLNik
+
+The github startedr code of this project is this.It hass all the images and icons needed
+
+https://github.com/Breens-Mbaka/Meditation-App/tree/Meditation-Starter-Code
+
+
+This is the fineshed app
+
+https://github.com/Breens-Mbaka/Meditation-App
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
