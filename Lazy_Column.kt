@@ -15,7 +15,7 @@ val personFour = Person("Allan",44,4)
 print(personOne.name)  --->  will print  --> George
 print(personTwo.name)  --->  will print  --> Eliud
 
-NOW IN THIS PROGET WE WILL HAVE A PERSON DATA CLASS
+NOW IN THIS PROGET WE WILL HAVE A PERSON DATA CLASs
 data class Person(
     val id: Int,
     val firstName: String,
