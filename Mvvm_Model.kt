@@ -26,11 +26,21 @@ ViewModel -    |         Requests data fromm the  repository                    
 Repository -   v         Requet Data from the Network or from the Local dataBase                  | The network or local databses sends required data back to the  repository. The repository then emits this data to the view model
 
 
+HAVE A PICTURE OF THIS ON THE IMAGE CALLED mvvm-flow-mage on this repository.
+
 
 The Network or Local Dataabse id the - Model part of the MVVM
 The Vir=ewMode and the UI make up the - viewModel and the View part of the MVVM.
 
 
+
+PACKAING STRUCTURE
+
+
+We will package our files according to features - a folder called DI - To house all deendecy injection files or a folder called  Screen to house all the screen in the app
+
+   - We do this beacuse it is easier to mainatin and onboared a new developer
+   - It is more scalable than packing by layer
 
 
 
