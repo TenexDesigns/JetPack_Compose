@@ -22,8 +22,10 @@ There is verticalAlignmemnt and
     }
     
     
+    ____________________________________________________________________________________________________________________________________________________________________________________
     
-   Column(horizontalArrangement = Arrangement.Bottom    // This puts all the items at the bootom of the x axis
+    
+   Row(horizontalArrangement = Arrangement.Bottom    // This puts all the items at the bootom of the x axis
                                             .Center /// This arranges all the items on the center of the x axixx
                                             .top   // This arranges all the items at the top of the y-axixs
                                             .spaceEvenly // This spreads the space betweeen the items evenly accroos the items on the x-axix  without free space on the first and last item.
