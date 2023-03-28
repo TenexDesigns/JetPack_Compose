@@ -176,6 +176,24 @@ ________________________________________________________________________________
       FragmentComponennt = Fragmennt scope 
       
       
+      
+         AndroidClass                        	Generated                               component	Scope
+      
+         Application	                        SingletonComponent	                    @Singleton
+         viewModel                           	ActivityRetainedComponent	              @ActivityRetainedScope
+         Activity	                            ActivityComponent                      	@ActivityScoped
+         Fragment	                            FragmentComponent	                      @FragmentScoped
+         View                               	ViewComponent                         	@ViewScoped
+         Service	                            ServiceComponent	                      @ServiceScoped
+                                                                                    This scopes are arranged in a hierachy where the higher scopes can be injected
+                                                                                    downwards
+                                                                                    But the lower scopes cannot be injected to the higher scopes.
+                                                                                   This is because the top ones out live the one that is lower
+                                                                                  e.g a view model(@ActivityRetained) can be injected into an application (@Singleton) since the activity outlives the viewmodel
+                                                                                       But a view model(@ActivityRetained) can not be injected into a fragment(@FragmentScoped)  since the fragment lives a shortr span than the viewmodel
+          
+      
+      
 
 
 
