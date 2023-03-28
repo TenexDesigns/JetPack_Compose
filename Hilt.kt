@@ -184,6 +184,7 @@ ________________________________________________________________________________
       
          AndroidClass                        	Generated                               component	Scope
       
+       
          Application	                        SingletonComponent	                    @Singleton
          viewModel                           	ActivityRetainedComponent	              @ActivityRetainedScope
          Activity	                            ActivityComponent                      	@ActivityScoped
@@ -203,7 +204,13 @@ ________________________________________________________________________________
                                                                                        But a view model(@ActivityRetained) can not be injected into a fragment(@FragmentScoped)  since the fragment lives a shortr span than the viewmodel
           
       
-      
+      HILT COMPONENT                           INJECTOR FOR
+      ApplictionComponent                      Application
+      ActvityRetainedComponent                ViewMode
+      ActvityComponent                        Actvity
+      FragmenetComponent                      Fragment
+      ViewComponent                           View
+      ServiceComponent                         Sevice
 
 
 
@@ -299,25 +306,141 @@ class someClass @Inject constructor(
 
 
 
+SOLVING THE ABOVE PROBLES HERE BELOW
+_________________________________________________________________________________________________________________________________________________________________________
+
+
+In the previous video we saw problemms in that you can not inject an interface or something that implements an interface  or an external libray.
+      E.g you can just inject a third party libray, and you can inject a class that implements an interface . You have to do something special to be able to do this
+THIS SPECIAL THING WILL BE WORKING WITH the annotation @Provides ,@Binds , building dagger modules @Modusles and installing them into components @Installing 
+      
+      1.inject instances with @Binds
+      2.inject instances with @Provides
+      
+      WHICH OF THE ABOVE IS BETTER,WHICH OF THE ABOVE IS MORE PERFORMANT
+      @Provides is better , easier and works in all scenarioes  while @Binds is More complesx and doesnt work n all scenarioes 
+
+___________________________________________________________________________
+      1111111111111111111111111111111111111111111111111
+      They have their respective scopes
+            
+      HILT COMPONENT                           INJECTOR FOR
+      
+      ApplictionComponent                      Application
+      ActvityRetainedComponent                ViewMode
+      ActvityComponent                        Actvity
+      FragmenetComponent                      Fragment
+      ViewComponent                           View
+      ServiceComponent                         Sevice
+      
+      AS SEEN HERE
+      
+           AndroidClass                        	Generated                               component	Scope
+      
+       
+         Application	                        Applicationomponent	                    @Singleton
+         viewModel                           	ActivityRetainedComponent	              @ActivityRetainedScope
+         Activity	                            ActivityComponent                      	@ActivityScoped
+         Fragment	                            FragmentComponent	                      @FragmentScoped
+         View                               	ViewComponent                         	@ViewScoped
+         Service	                            ServiceComponent	                      @ServiceScoped
+_________________________________________________________________________
+      In the previous video we saw problemms in that you can not inject an interface or something that implements an interface  or an external libray.
+      Thse are the Interface and interfaceImplementation we are going to use
+      
+      -------------------------------------------------------------------------------------------------------------------
+ THIS IS THE INTERFACE AND INTERFACE IMPLEMEMNTION
+       
+      class someInterfaceImplemetation @Inject constructor():SomeInterface {
+        
+        overide fun getThing():String{
+          
+          return "A String"
+        
+        }
+      
+      }
 
 
 
+  
+      interface SomeInterface{
+        
+        fun getAThing():String 
+      }
+--------------------------------------------------------------------------------------------------------------
+      
+      
+      
+
+FIRST WE CREATE A MODULE CLASS
+__________________________________
+ The module class is annoted with the @Module annotation
+      The module class is always an abstract class
+
+            // Remember the scopes and their components .   ... Loook at the above table with many ones on it.
+ @Installing(AplicationComponent::class) // this is where we want the module to be installed to. This is the application classs we made at the beging of this tutorial.     
+@Module      // Here we tell hilt where to install that module to. Since we all installing this  module in the appplication component ,we know that the depenecies in this class will be alive as long as the application is above
+abstract class{
+  
+  
+  @Singleton  /// This scope must be the ame as where we are installing this component
+  @Binds 
+  
+  abstract fun bindSomeDependcy(
+    someImpl:SomeInterfaceImplemnetatin
+  
+  ):SomeInterface 
+
+  
+   @Singleton  /// This scope must be the ame as where we are installing this component
+  @Binds 
+  
+  abstract fun gsonDependcy(
+    gson:Gson
+  
+  ):Gson 
 
 
 
+}
+
+USING @PROVIDES
+________________________________________________________________
+
+      @Installing(ApplicationComponent::Class)
+      @Module
+      Class MyModule{
+        
+        @Singleton
+        @Provides
+        fun ProvidesSomeInterface():SomeInterface{
+          return SomeInterfaceImpl()
+        
+          }  }
+      
+
+
+-------------------------------------------------------------------------------------------------------------------
+ THIS IS THE INTERFACE AND INTERFACE IMPLEMEMNTION
+       
+      class someInterfaceImplemetation @Inject constructor():SomeInterface {
+        
+        overide fun getThing():String{
+          
+          return "A String"
+        
+        }
+      
+      }
 
 
 
-
-
-
-
-
-
-
-
-
-
+  
+      interface SomeInterface{
+        
+        fun getAThing():String 
+      }
 
 
 
