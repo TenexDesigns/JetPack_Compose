@@ -486,5 +486,164 @@ This is how we do it for Gson
           }  }
 
 
+      
+      
+      
+      HOW DOES HILT DIFFRENCIATE INSTANCES OF SAME TYPE
+  
+  
+   Here we are going to provide two interface interprattionsion sthat use the same interface
+  
+  
+        class someInterfaceImplemetationONE @Inject constructor(  ):SomeInterface {
+        
+        overide fun getThingA():String{
+          
+          return " Get the string called ONE "
+        
+        }
+      
+      }
+        
+        
+                class someInterfaceImplemetationTWO @Inject constructor( ):SomeInterface {
+        
+        overide fun getThingB():String{
+          
+          return " Get the string calleD TWO"
+        
+        }
+      
+      }
+
+
+
+  
+      interface SomeInterface{
+        
+        fun getAThing():String 
+      }
+      
+      
+      
+      
+      
+      __________ Here we implement our Module
+  
+      @Installing(ApplicationComponent::Class)
+      @Module
+      Class MyModule{
+        
+        FOR THE MODULE TO DIFFERNCIATE THE TWO
+        
+        
+        
+        @Singleton  // This will be sent to the interface implementation
+        @Provides
+        fun ProvidesSomeStringOne():SomeInterface{
+          return  someInterfaceImplOne()
+        
+          }  }
+        
+        @Singleton
+        @Provides
+        fun ProvidesSomeInterface():SomeInterface{
+           return SomeInterfaceImplTwo()
+        
+          }  }
+      
+      
+      
+      
+      to solve the above challenge ,we go below the module class
+  
+  
+  @Qualifier
+  @Retention(AnnotationRetention.BINARY) // There are others like .RUNTIME or .SOURCE or .BINARY
+  annotation class Imple1          -- > the aim of this is to create thses new annotations 
+  
+  
+  @Qualifier
+  @Retention(AnnotationRetention.BINARY) // There are others like .RUNTIME or .SOURCE or .BINARY
+  annotation class Imple2
+  
+  ________________WE GO BACK TO OUR MODULE AND MARK OUR INSTEFACES OF SAME TYPE
+  
+  
+        @Installing(ApplicationComponent::Class)
+      @Module
+      Class MyModule{
+        
+        FOR THE MODULE TO DIFFERNCIATE THE TWO
+        
+        nOW THEY CAN BE DIIFERNCIATED FROM EACH OTHER.
+        @Impl1
+        @Singleton  // This will be sent to the interface implementation
+        @Provides
+        fun ProvidesSomeStringOne():SomeInterface{
+          return  someInterfaceImplOne()
+        
+          }  }
+        
+        
+        @Impl2
+        @Singleton
+        @Provides
+        fun ProvidesSomeInterface():SomeInterface{
+           return SomeInterfaceImplTwo()
+        
+          }  }
+      
+   
+      
+      Even in that class we are going to inject these implementations as dependecies
+ we aslo annotate them with the custom annotations
+
+
+
+class someClass @Inject Constructor( 
+  @Impl1 private val someInterfaceImpl1:SomeInterface,
+  @Impl2 private val someInterfaceImpl1:SomeInterface,
+){
+  
+  fun doThingA:String{
+    return "Look ${someInterfaceImpl.getThingA()}"
+  
+  }
+  
+    
+  fun doThingb:String{
+    return "Look ${someInterfaceImpl.getThingB()}"
+  
+  }
+
+
+
+}
+      NOW IN OUR ACITIVIT WE CAN CALLL
+
+println(someClass.doThing1())  -- > This will print "look Get the string called ONE "
+println(someClass.doThing2())  -- > This will print "look Get the string called TWO "
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 
 
