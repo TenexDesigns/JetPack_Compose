@@ -143,16 +143,68 @@ You can perform long-running operations, such as network or disk I/O, within the
 
 
 
+LAUNCH ,ASYNC, RUNBLOCKING
+// It is always recommended to use launch ,unless you want to use async to get a result ,or use runBlocking that blocks other courtines
+_______________________________________________________________________________________________________________________________________________________________________
+
+In the context of coroutines in Kotlin, launch, async, and runBlocking are coroutine builders that are used to start a new coroutine. 
+Although they may seem similar at first, they have some important differences that make them suited to different use cases.
+
+In the context of coroutines in Kotlin, launch, async, and runBlocking are different ways of creating and executing coroutines with distinct characteristics 
+and use cases.
+
+1.LAUNCH
+
+launch is a coroutine builder that launches a new coroutine and immediately returns a Job instance representing that coroutine.
+The coroutine runs in the specified coroutine scope and can be cancelled at any time using the returned Job instance. 
+launch is typically used for fire-and-forget operations, where we dont care about the result of the coroutine.
+Example:
+
+
+fun main() {
+    CoroutineScope(Dispatchers.Default).launch {
+        // run the coroutine on the Default dispatcher
+        println("Launching a coroutine on thread ${Thread.currentThread().name}")
+    }
+    Thread.sleep(1000L) // pause the main thread for 1 second
+}
+
+
+
+2.ASYNC 
+
+async is a coroutine builder that launches a new coroutine and immediately returns a Deferred instance representing the result of that coroutine.
+The coroutine runs in the specified coroutine scope and can be cancelled at any time using the returned Deferred instance.
+async is typically used when we need to perform a computation asynchronously and return its result.
+
+fun main() {
+    val deferred = CoroutineScope(Dispatchers.Default).async {
+        // run the coroutine on the Default dispatcher
+        println("Performing a computation on thread ${Thread.currentThread().name}")
+        return@async 42
+    }
+    Thread.sleep(1000L) // pause the main thread for 1 second
+    val result = deferred.await() // wait for the coroutine to complete and get its result
+    println("Result is $result")
+}
 
 
 
 
+3. RUN BLOCKING 
 
+runBlocking is a function that creates a new coroutine scope and runs the specified block of code in that scope.
+The coroutine runs on the thread calling runBlocking and blocks the calling thread until the coroutine completes. 
+runBlocking is typically used in testing or main functions where we need to wait for the coroutine to complete before exiting the application.
 
+fun main() = runBlocking {
+    // create a new coroutine scope and run the code inside it
+    println("Launching a coroutine on thread ${Thread.currentThread().name}")
+}
 
-
-
-
+Overall, launch, async, and runBlocking are all useful coroutine builders in different situations.
+launch is used for fire-and-forget operations, async is used for performing computations asynchronously and returning their results,
+and runBlocking is used for running code in a blocking manner in testing or main functions.
 
 
 
