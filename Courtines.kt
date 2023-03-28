@@ -40,6 +40,8 @@ Thses are background threds
 // Dispachers.Default
 // Dispachers.unconfined
 
+note we use CoroutineScope("").launch{} to launch or start a couritine.
+
 
 fun fetchUserData() {     
   // Here we launch the  coroutines within a coroutine scope using a coroutine builder like launch ,or async or runBlocking
