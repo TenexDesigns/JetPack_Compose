@@ -176,6 +176,11 @@ ________________________________________________________________________________
       FragmentComponennt = Fragmennt scope 
       
       
+      Here if you annotet a depency with e.g @Singleton , that depency will live as long as the app lives
+      If you aannote a depencdecy with @ActvityRetainedScope , it will live as long as a view model lives 
+      if you annotete a depencecy with @ActvityScoped ,it will live as long as a actvity lives.
+      Here are the diffrent scopes.
+      
       
          AndroidClass                        	Generated                               component	Scope
       
@@ -189,6 +194,11 @@ ________________________________________________________________________________
                                                                                     downwards
                                                                                     But the lower scopes cannot be injected to the higher scopes.
                                                                                    This is because the top ones out live the one that is lower
+                                                                                    So if I have a dependcy that is @AcivityScoped  --- I ca inject it to
+                                                                                               @viewScoped ,@fraggmenscpod,@servicescoped
+                                                                                              
+                                                                                              
+                                                                                              
                                                                                   e.g a view model(@ActivityRetained) can be injected into an application (@Singleton) since the activity outlives the viewmodel
                                                                                        But a view model(@ActivityRetained) can not be injected into a fragment(@FragmentScoped)  since the fragment lives a shortr span than the viewmodel
           
@@ -207,13 +217,84 @@ ________________________________________________________________________________
 
 
 
+ERROR WHEN DOIUNG CONSTRUCTOR INJECTION
+__________________________________________________________________________________________________________________________________________
+
+      
+      
+       This comes up alot of of times you are building your data sources ,cache datas source,network data source  or any data sourece in your architecture
+      even any kind og classs
+      
+      .What you do is stub out the functions in an interface and then implement those interaces in a class. Here is an example
+      
+      
+      interface SomeInterface{
+        
+        fun getAThing():String                --What ever class extends or implements this interface must overide this function and ensure that it t=returns a string as indicted 
+      
+      }
+
+      
+      
+      
+      
+      
+      
+      class someInterfaceImplemetation @Inject constructor():SomeInterface {
+        
+        overide fun getThing():String{
+          
+          return "A String"
+        
+        }
+      
+      }
+      
+      THEN WE MAY WANT TO DO CONSTRUCTOR INJECTION WITH THE ABOVE IMPLEMEMNTATION OF AN INTERFACE
+      // This scenario comes up when building your cashing sources ,your network sources 
+        //private val someOtherClassImplemetation:someInterface  // You can even build fakes for them for testing. This makes testing easier
+      
+ class someClass @Inject constructor(  
+                            // Here this injected dependcy is of the type of the interface it extends
+   private val someOtherClassImplemetation:someInterface                                           THIS IS CONSTRUCTOR INJECTION //--> This is considred constructor injection
+ 
+ ){ 
+   
+   fun doAThing():String{
+     return someInterfaceImplemetation.getThing()          This will give you a comple time errror 
+                                                           You can not do constructor injection on an interface
+   
+   
+   }
+  
+
+  
+  
+  }
+
+}
+      
+      
+      ____________*******************The second Isssue is if you try to do constructor injection with something tha you cont own e.g a thrid pary libray e.g GSon convert *****************
 
 
 
+class someClass @Inject constructor(  
+  
+  you cant do this since you dont own this libray
+                            
+   private val gson:Gson                                           THIS IS CONSTRUCTOR INJECTION //--> This is considred constructor injection
+ 
+ ){ 
+   
+ 
+   
+   }
+  
 
-
-
-
+  
+  
+  }
 
 
 
