@@ -43,6 +43,15 @@ We will package our files according to features - a folder called DI - To house 
    - It is more scalable than packing by layer
 
 
+SUMMARY OF THE ABOVE 
+
+- Ui observables state from the View model
+- View model communicates with the repository to get data
+- View model transforms data to states that the UI can observe
+- Repository layer can get data from either the network or loacl data base
+- Repository layer is where you can do the bussiness logic i.e filtering and transforming data.
+
+
 
 
 
