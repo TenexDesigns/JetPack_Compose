@@ -422,13 +422,13 @@ ________________________________________________________________
 
 
 -------------------------------------------------------------------------------------------------------------------
- THIS IS THE INTERFACE AND INTERFACE IMPLEMEMNTION
+ THIS IS THE INTERFACE AND INTERFACE IMPLEMEMNTION WHEB WE HAVE SOME DEPENDCEIS ON THE INTERFACE IMPLEMENTATION
        
-      class someInterfaceImplemetation @Inject constructor():SomeInterface {
+      class someInterfaceImplemetation @Inject constructor( private val someDependecy:String ):SomeInterface {
         
         overide fun getThing():String{
           
-          return "A String"
+          return " Get the string called ${someDependecy}"
         
         }
       
@@ -443,12 +443,47 @@ ________________________________________________________________
       }
 
 
+-------------THIS IS WHAT WE DO INCASE THE INTERFACEE IMPLEMTATION HAS A DEPENDCY
+      
+      
+      @Installing(ApplicationComponent::Class)
+      @Module
+      Class MyModule{
+        
+        
+        
+        @Singleton  // This will be sent to the interface implementation
+        @Provides
+        fun ProvidesSomeString():String{
+          return "some string"
+        
+          }  }
+        
+        @Singleton
+        @Provides
+        fun ProvidesSomeInterface(
+            someString:String // The moule knows to use the above Provides and pss it here
+        ):SomeInterface{
+           return SomeInterfaceImpl(someString)
+        
+          }  }
 
 
 
-
-
-
+----------------------------------------------------------------------
+This is how we do it for Gson
+  
+      @Installing(ApplicationComponent::Class)
+      @Module
+      Class MyModule{
+  
+  
+             @Singleton
+             @Provides
+        fun ProvideGson):Gson{
+          return Gson()
+        
+          }  }
 
 
 
