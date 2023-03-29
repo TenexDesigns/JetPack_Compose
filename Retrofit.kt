@@ -26,6 +26,9 @@ LETS GET STARTED
 
 In the past there we some librays that we used to connect your app to the intennet and handle handle http requests
 Examples in clude OkHTTP, HTTPurl ,retrofit and volly.
+
+NOTE************** THEY ALL USE BACKGROUND THREADS AND ARE ASYNCHROUS IN NATURE ******
+	
 They all use BackGround Therads and are Assynchronous in nature.
 How ever Retrofit stands out of all of this and by far is the best http libray
 
