@@ -170,14 +170,18 @@ A web service is a program in the webserver that reads the http request ,process
 
 
   RESTFUL WEB SERVICE
+RESTFUL WEB SERVICE - A web serice is restful when it provides STATELSS OPERATIONS, to manange data using different HTTP METHODS and STRUCTURED URLS.
+
 What makes a web service restful
 
 - It si estableshed through a stateless client-server relationship
 - Thses services relie on http methods i.e GET PUT POST DELETE
-- Restfull communication oocurs through structured and consistent URLs  e.g delete http:/google.com ,update http:/google.com . The url google.com remains constent.
+- Restfull communication oocurs throughstateless client-server relationship e.g delete http:/google.com ,update http:/google.com . The url google.com remains constent.
 - They can use diffferent data types to transfer information // Mostly json is used to transfer data.
 
+RESTFUL WEB SERVICE - A web serice is restful when it provides STATELSS OPERATIONS, to manange data using different HTTP METHODS and STRUCTURED URLS.
 
+	
 GETTING STARTED WITH RETEROFIT
 
 To get started with retrofit ,you need to ask user for permission to acess internent
