@@ -22,7 +22,7 @@ fun getPostList() {
               
             } else if (response.code() == 401){
 
-                val errorMessage = response.errorBody()?.string() // or use a custom parser for more complex error responses
+                 errorMessage = response.errorBody()?.string() // or use a custom parser for more complex error responses
                 // Log the error message or update the UI
                 Log.e("PostViewModel", "Error Your session has expired. Please Login again: $errorMessage")
             }
@@ -31,7 +31,7 @@ fun getPostList() {
             else { // Application-level failure
                     // Your status code is in the range of 300's, 400's and 500's
                 // Extract the error message from the response
-                val errorMessage = response.errorBody()?.string() // or use a custom parser for more complex error responses
+                 errorMessage = response.errorBody()?.string() // or use a custom parser for more complex error responses
                 // Log the error message or update the UI
                 Log.e("PostViewModel", "Error fetching posts: $errorMessage")
             }
