@@ -149,8 +149,12 @@ Remember to remove or set the log level to NONE in your production builds to avo
 
 
 
+MORE EXPLANANTION
+**********************************************************
 
+With the above changes, the OkHttp client in the ServiceBuilder is configured with an HttpLoggingInterceptor. The interceptor is set to HttpLoggingInterceptor.Level.BODY, which logs the request and response headers as well as the request and response bodies.
 
+By adding this interceptor, you can easily monitor and debug your network calls by examining the log output.
 
 
 
