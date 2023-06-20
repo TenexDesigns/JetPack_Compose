@@ -1,7 +1,7 @@
 To handle HTTP requests in your Jetpack Compose app, you can use libraries such as Retrofit or Ktor. These libraries help you make network calls and parse the response data into your data models.
 
 1.Retrofit: Retrofit is a popular library for making HTTP requests and handling JSON data in Android apps. It works well with Jetpack Compose and Kotlin coroutines.
-To get started with Retrofit, add the following dependencies to your app's build.gradle file:
+To get started with Retrofit, add the following dependencies to your apps build.gradle file:
 
    dependencies {
        // Retrofit
