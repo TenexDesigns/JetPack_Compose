@@ -93,11 +93,11 @@ Please note that this order assumes that each file is in its own separate file a
 
 
 
-CODE EXPLANANTION
+CODE EXPLANANTION  -OF THE FILES
 **********************************************************************************************************************************8
 
 
-The code you provided demonstrates fetching and displaying data using Retrofit and Jetpack Compose. Let's break it down and explain each component:
+The code you provided demonstrates fetching and displaying data using Retrofit and Jetpack Compose. Lets break it down and explain each component:
 
 1.Data_Model.kt:
 This file defines the data model PostResponse which represents the structure of a post with properties such as id, userId, title, and body.
@@ -132,7 +132,7 @@ Overall, this code fetches the posts from the specified API endpoint using Retro
 
 
 
-CODE EXPLANANTION
+CODE EXPLANANTION - OF THE FILE
 **********************************************************************************************************************************8
 
           The provided code is an example of how to consume an API using Retrofit in Kotlin. Here is a breakdown of what each part of the code does:
@@ -156,7 +156,7 @@ CODE EXPLANANTION
 
 To send data in the request body using Retrofit, you can use annotations like @Body, @Field, @FieldMap, or @Part depending on the type of data you want to send. These annotations allow you to specify the format of the data and how it should be serialized.
 
-If you want to send JSON data in the request body, you can use the @Body annotation and pass a RequestBody object. Here's an example:
+If you want to send JSON data in the request body, you can use the @Body annotation and pass a RequestBody object. Heres an example:
 
 interface APIService {
     @POST("/api/v1/create")
@@ -186,11 +186,100 @@ Sources:
 
 
 
+CODE EXPLANANTION  ---> LAUNCHED EFFECT
+**********************************************************************************************************************************8
+LaunchedEffect is a Jetpack Compose composable function that is used to launch coroutines from within a composable function. When LaunchedEffect enters the composition, it launches a coroutine with the block of code passed as a parameter developer.android.com. It runs its lambda as soon as it enters the composition and will run it again whenever one of the given keys changes composables.com.
+
+The key parameters control the behavior of the coroutine through recompositions. As long as the values of any of the key parameters remain unchanged, LaunchedEffect will keep the same coroutine running through multiple recompositions of the parent composable. If a key value changes, however, LaunchedEffect will cancel the current coroutine and launch a new one answertopia.com.
+
+In the context of the Display composable function, LaunchedEffect is used to fetch the data when the composable is launched:
+
+@Composable
+fun Display() {
+    // Get a reference to the ViewModel
+    val postViewModel = viewModel<PostViewModel>()
+
+    // Fetch the data when the Display composable is launched
+    LaunchedEffect(Unit) {
+        postViewModel.getPostList()
+    }
+
+    // Display the posts
+    // ...
+}
+By using LaunchedEffect, you ensure that the getPostList() function is called when the Display composable is launched, and the coroutine is automatically canceled if the composable is disposed of, avoiding potential resource leaks and ensuring that the work is only done while the composable is active.
 
 
 
 
 
+  ...
+
+
+CODE EXPLANANTION  ---> VIEW MODEL SCOPE
+**********************************************************************************************************************************8
+viewModelScope.launch is used to launch a coroutine within the scope of a ViewModel. The viewModelScope is an extension property available in the androidx.lifecycle:lifecycle-viewmodel-ktx library, which provides a CoroutineScope specifically designed for ViewModels.
+
+When you launch a coroutine using viewModelScope.launch, the coroutine is automatically canceled if the ViewModel is cleared. This is useful for work that needs to be done only if the ViewModel is active, such as network calls or other background tasks. By using viewModelScope, you can ensure that resources are not wasted if the ViewModel is no longer in use developer.android.com.
+
+In the PostViewModel example, viewModelScope.launch is used to fetch the list of posts in a coroutine:
+
+fun getPostList() {
+    viewModelScope.launch {
+        // Fetch the list of posts and update the state
+    }
+}
+By using viewModelScope.launch, the coroutine will automatically be canceled if the ViewModel is cleared, avoiding potential resource leaks and ensuring that the work is only done while the ViewModel is active medium.com.
+
+
+
+
+
+
+
+
+
+
+  ..
+
+
+CODE EXPLANANTION  ---> SUSPEND FUNCTION
+**********************************************************************************************************************************8
+
+
+A suspend function is a special kind of function in Kotlin that can be paused and resumed at a later time without blocking the current thread. Suspend functions are primarily used with Kotlin coroutines, which are lightweight and non-blocking units of asynchronous work amitshekhar.me.
+
+The main advantage of using suspend functions is that they allow you to write asynchronous code in a more sequential and readable manner. Suspend functions can only be called from another suspend function or within a coroutine geeksforgeeks.org.
+
+In the given context, we used a suspend function in the PostService interface:
+
+interface PostService {
+    @GET("posts")
+    suspend fun getPostList(): Response<List<PostResponse>>
+}
+The reason for using a suspend function here is to make the network call asynchronous and non-blocking. By marking the getPostList() function as suspend, you can call it within a coroutine without blocking the UI thread, allowing the app to remain responsive while fetching data from the API amitshekhar.me.
+
+In the PostViewModel, we call the getPostList() suspend function within a coroutine using viewModelScope.launch, which ensures that the network call is executed asynchronously:
+
+fun getPostList() {
+    viewModelScope.launch {
+        val postService = ServiceBuilder.buildService(PostService::class.java)
+        try {
+            val response = postService.getPostList().await()
+            // ...
+        } catch (e: Exception) {
+            // ...
+        }
+    }
+}
+By using suspend functions and coroutines, you can write asynchronous code in a more structured and readable way, making it easier to maintain and understand.
+
+
+
+
+
+
+  ......
 
 
 
