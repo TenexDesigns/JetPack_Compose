@@ -68,7 +68,14 @@ class PostViewModel : ViewModel() {
 
 
 
+4.In this example, the @Header annotation is used to add the "Authorization" header to the getSomeData API call. The value for the header is passed as a parameter to the method.
+You can then provide the header value when making the API call:
+   val apiService = retrofit.create(APIService::class.java)
+   val token = "Your Authorization Token"
 
+   val response = apiService.getSomeData(token)
+In this example, the token value is passed as an argument to the getSomeData method, which will be used as the value for the "Authorization" header in the request.
+Remember to use headers responsibly and follow the protocols of HTTP. Headers should not be used as a replacement for the request body.
 
 
 
